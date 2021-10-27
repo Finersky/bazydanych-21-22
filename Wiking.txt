@@ -1,0 +1,4 @@
+CREATE TABLE postac(id_postaci INT PRIMARY KEY, nazwa VARCHAR(40), rodzaj ENUM('wiking','ptak','kobieta'), data_ur DATE NOT NULL, wiek INT UNSIGNED);
+INSERT INTO postac VALUES(1, 'Bjorn','wiking','1976-11-10','44');
+INSERT INTO postac VALUES(2, 'Drozd','ptak','2013-01-05','8');
+INSERT INTO postac VALUES(3, 'Tesciowa','kobieta','1952-07-07','69');
