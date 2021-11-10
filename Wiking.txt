@@ -1,3 +1,5 @@
+LEKCJA 1
+
 CREATE TABLE postac(id_postaci INT PRIMARY KEY, nazwa VARCHAR(40), rodzaj ENUM('wiking','ptak','kobieta'), data_ur DATE NOT NULL, wiek INT UNSIGNED);
 INSERT INTO postac VALUES(1, 'Bjorn','wiking','1976-11-10','44');
 INSERT INTO postac VALUES(2, 'Drozd','ptak','2013-01-05','8');
@@ -20,3 +22,46 @@ zawartosc VARCHAR(200), dodatek VARCHAR(200) DEFAULT 'papryczka_chilli', id_kons
 INSERT INTO przetwory VALUES('1','1972','1','kapusta,kielbasa,cebula,koncentrat','papryczka_chilli','3');
 
 INSERT INTO postac VALUES(4, 'Seba','wiking','1988-02-14','33');
+INSERT INTO postac VALUES(5, 'Haaland','wiking','2002-05-22','19');
+INSERT INTO postac VALUES(6, 'Ikea','wiking','1951-01-16','70');
+INSERT INTO postac VALUES(7, 'Zlatan','wiking','1991-08-20','30');
+INSERT INTO postac VALUES(8, 'Juzek','wiking','2006-12-24','14');
+
+CREATE TABLE statek(nazwa_statku VARCHAR(50) PRIMARY KEY,rodzaj_statku ENUM('transportowy','wycieczkowy','wojenny'),data_wodowania DATE,max_ladownosc INT UNSIGNED);
+INSERT INTO statek VALUES('Burza','wojenny','2021-11-10','1000');
+INSERT INTO statek VALUES('Bartek','wycieczkowy','2015-07-07','200');
+ALTER TABLE postac ADD funkcja VARCHAR(50);
+UPDATE postac SET funkcja='kapitan' WHERE id_postaci=1;
+ALTER TABLE postac ADD statek VARCHAR(50);
+ALTER TABLE postac ADD FOREIGN KEY (statek) REFERENCES statek(nazwa_statku);
+UPDATE postac SET statek='Bartek' WHERE rodzaj='wiking';
+UPDATE postac SET statek='Bartek' WHERE id_postaci=2;
+DELETE FROM izba WHERE nazwa_izby='spizarnia';
+DROP TABLE izba;
+
+
+LEKCJA 2
+
+DELETE FROM postac WHERE id_postaci=4;
+DELETE FROM postac WHERE id_postaci=6;
+ALTER TABLE walizka DROP FOREIGN KEY walizka_ibfk_1;
+ALTER TABLE postac DROP FOREIGN KEY postac_ibfk_1;
+ALTER TABLE przetwory DROP FOREIGN KEY przetwory_ibfk_1;
+ALTER TABLE przetwory DROP FOREIGN KEY przetwory_ibfk_2;
+ALTER TABLE postac MODIFY id_postaci INT;
+ALTER TABLE postac DROP PRIMARY KEY;
+ALTER TABLE postac DROP id_postaci;
+
+ALTER TABLE postac ADD pesel VARCHAR(11);
+UPDATE postac SET pesel='12345678910' WHERE nazwa='Bjorn';
+UPDATE postac SET pesel='12345678911' WHERE nazwa='Drozd';
+UPDATE postac SET pesel='12345678912' WHERE nazwa='Tesciowa';
+UPDATE postac SET pesel='12345678913' WHERE nazwa='Haaland';
+UPDATE postac SET pesel='12345678914' WHERE nazwa='Zlatan';
+UPDATE postac SET pesel='12345678915' WHERE nazwa='Juzek';
+ALTER TABLE postac ADD PRIMARY KEY (pesel);
+ALTER TABLE postac MODIFY rodzaj ENUM('wiking','ptak','kobieta','syrena');
+INSERT INTO postac VALUES('Gertruda_Nieszczera','syrena','1751-12-01','269','NULL','NULL','12345678916')
+
+UPDATE postac SET statek='Bartek' WHERE nazwa='Tesciowa';
+UPDATE postac SET statek='Bartek' WHERE nazwa='Gertruda_Nieszczera';
