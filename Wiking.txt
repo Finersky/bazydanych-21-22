@@ -1,31 +1,41 @@
 LEKCJA 1
 
+zadanie 1
+
 CREATE TABLE postac(id_postaci INT PRIMARY KEY, nazwa VARCHAR(40), rodzaj ENUM('wiking','ptak','kobieta'), data_ur DATE NOT NULL, wiek INT UNSIGNED);
 INSERT INTO postac VALUES(1, 'Bjorn','wiking','1976-11-10','44');
 INSERT INTO postac VALUES(2, 'Drozd','ptak','2013-01-05','8');
 INSERT INTO postac VALUES(3, 'Tesciowa','kobieta','1952-07-07','69');
 UPDATE postac SET wiek='88' WHERE id_postaci='3';
 
+zadanie 2
 
 CREATE TABLE walizka(id_walizki INT PRIMARY KEY AUTO_INCREMENT, pojemnosc INT UNSIGNED, kolor ENUM('rozowy','czerwony','teczowy','zolty'), id_wlasciciela INT, FOREIGN KEY (id_wlasciciela) REFERENCES postac(id_postaci));
 INSERT INTO walizka VALUES (1,'10','zolty', '1');
 INSERT INTO walizka VALUES (2,'14','teczowy', '2');
 UPDATE walizka SET kolor='rozowy';
 
+zadanie 3
 
 CREATE TABLE izba(adres_budynku VARCHAR(40), nazwa_izby VARCHAR(40), metraz INT UNSIGNED,wlasciciel INT, FOREIGN KEY (wlasciciel) REFERENCES postac(id_postaci), PRIMARY KEY(adres_budynku, nazwa_izby));
 ALTER TABLE izba ADD kolor VARCHAR(40) DEFAULT ('czarny');
 INSERT INTO izba(adres_budynku, nazwa_izby, metraz, kolor, wlasciciel) VALUES ('dworcowa_30','spizarnia','8','bialy','1');
 
+zadanie 4
+
 CREATE TABLE przetwory(id_przetworu INT PRIMARY KEY, rok_produkcji YEAR DEFAULT '1954',id_wykonawcy INT,
 zawartosc VARCHAR(200), dodatek VARCHAR(200) DEFAULT 'papryczka_chilli', id_konsumenta INT, FOREIGN KEY (id_wykonawcy) REFERENCES postac(id_postaci), FOREIGN KEY(id_konsumenta) REFERENCES postac(id_postaci));
 INSERT INTO przetwory VALUES('1','1972','1','kapusta,kielbasa,cebula,koncentrat','papryczka_chilli','3');
+
+zadanie 5
 
 INSERT INTO postac VALUES(4, 'Seba','wiking','1988-02-14','33');
 INSERT INTO postac VALUES(5, 'Haaland','wiking','2002-05-22','19');
 INSERT INTO postac VALUES(6, 'Ikea','wiking','1951-01-16','70');
 INSERT INTO postac VALUES(7, 'Zlatan','wiking','1991-08-20','30');
 INSERT INTO postac VALUES(8, 'Juzek','wiking','2006-12-24','14');
+
+zadanie 6
 
 CREATE TABLE statek(nazwa_statku VARCHAR(50) PRIMARY KEY,rodzaj_statku ENUM('transportowy','wycieczkowy','wojenny'),data_wodowania DATE,max_ladownosc INT UNSIGNED);
 INSERT INTO statek VALUES('Burza','wojenny','2021-11-10','1000');
@@ -42,6 +52,8 @@ DROP TABLE izba;
 
 LEKCJA 2
 
+zadanie 1
+
 DELETE FROM postac WHERE id_postaci=4;
 DELETE FROM postac WHERE id_postaci=6;
 ALTER TABLE walizka DROP FOREIGN KEY walizka_ibfk_1;
@@ -51,6 +63,8 @@ ALTER TABLE przetwory DROP FOREIGN KEY przetwory_ibfk_2;
 ALTER TABLE postac MODIFY id_postaci INT;
 ALTER TABLE postac DROP PRIMARY KEY;
 ALTER TABLE postac DROP id_postaci;
+
+zadanie 2
 
 ALTER TABLE postac ADD pesel VARCHAR(11);
 UPDATE postac SET pesel='12345678910' WHERE nazwa='Bjorn';
@@ -63,5 +77,64 @@ ALTER TABLE postac ADD PRIMARY KEY (pesel);
 ALTER TABLE postac MODIFY rodzaj ENUM('wiking','ptak','kobieta','syrena');
 INSERT INTO postac VALUES('Gertruda_Nieszczera','syrena','1751-12-01','269','NULL','NULL','12345678916')
 
-UPDATE postac SET statek='Bartek' WHERE nazwa='Tesciowa';
-UPDATE postac SET statek='Bartek' WHERE nazwa='Gertruda_Nieszczera';
+zadanie 3
+
+UPDATE postac SET statek = 'Bartek' WHERE nazwa LIKE '%a%';
+UPDATE statek SET max_ladownosc = max_ladownosc * 0.7 WHERE data_wodowania BETWEEN '1901.01.01' AND '2000.12.31';
+SELECT * FROM postac WHERE wiek > 1000;
+
+zadanie 4
+
+ALTER TABLE postac MODIFY COLUMN rodzaj ENUM('wiking','ptak','kobieta','syrena','waz');
+INSERT INTO postac (nazwa,Rodzaj,data_ur,wiek,pesel) VALUES('Waz_Loko','waz','1510-09-22',511,12345678917);
+CREATE TABLE marynarz LIKE postac;
+INSERT INTO marynarz SELECT * FROM postac WHERE statek='Bartek';
+INSERT INTO marynarz SELECT * FROM postac WHERE statek='Burza';
+
+zadanie 5
+UPDATE marynarz SET statek = NULL;
+UPDATE postac SET statek = NULL;
+DELETE FROM postac WHERE nazwa='Haaland';
+DELETE FROM marynarz WHERE nazwa='Haaland';
+DELETE FROM statek;
+DROP TABLE statek;
+CREATE TABLE zwierz(id_zwierza INT PRIMARY KEY AUTO_INCREMENT, nazwa VARCHAR (40), wiek INT);
+INSERT INTO zwierz (nazwa,wiek) VALUES('Drozd','8');
+INSERT INTO zwierz (nazwa,wiek) VALUES('Waz_Loko','511');
+
+
+LEKCJA 3
+
+zadanie 1
+
+CREATE TABLE kreatura SELECT * FROM wikingowie.kreatura;
+ CREATE TABLE zasob SELECT * FROM wikingowie.zasob;
+ CREATE TABLE ekwipunek SELECT * FROM wikingowie.ekwipunek;
+SELECT * FROM zasob;
+SELECT * FROM zasob WHERE rodzaj='jedzenie';
+SELECT idZasobu, ilosc FROM ekwipunek WHERE idKreatury='1' OR idKreatury='3' OR idKreatury='5';
+
+zadanie 2
+
+SELECT * FROM kreatura WHERE NOT rodzaj='wiedzma' AND udzwig>=50;
+SELECT * FROM zasob WHERE waga>=2 AND waga<=5;
+SELECT * FROM kreatura WHERE nazwa LIKE '%or%' AND udzwig BETWEEN 30 AND 70;
+
+
+zadanie 3
+
+SELECT * FROM zasob WHERE MONTH (dataPozyskania) BETWEEN 07 AND 08;
+SELECT * FROM zasob WHERE NOT rodzaj='NULL' ORDER BY waga;
+SELECT * FROM kreatura ORDER BY dataUr DESC LIMIT 5;
+
+zadanie 4
+
+SELECT DISTINCT rodzaj FROM zasob;
+SELECT nazwa,rodzaj FROM kreatura WHERE rodzaj LIKE '%wi%';
+SELECT nazwa,ilosc*waga FROM zasob WHERE YEAR(dataPozyskania) BETWEEN 2000 AND 2007;
+
+zadanie 5
+
+SELECT nazwa,ilosc*waga*0.7 AS 'netto', ilosc*waga*0.3 AS 'odpadki' FROM zasob WHERE rodzaj='jedzenie';
+SELECT * FROM zasob WHERE rodzaj IS NULL;
+SELECT DISTINCT nazwa FROM zasob WHERE nazwa LIKE 'Ba%' OR nazwa LIKE '%os' ORDER BY nazwa ASC;
