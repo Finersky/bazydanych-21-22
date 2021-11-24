@@ -138,3 +138,18 @@ zadanie 5
 SELECT nazwa,ilosc*waga*0.7 AS 'netto', ilosc*waga*0.3 AS 'odpadki' FROM zasob WHERE rodzaj='jedzenie';
 SELECT * FROM zasob WHERE rodzaj IS NULL;
 SELECT DISTINCT nazwa FROM zasob WHERE nazwa LIKE 'Ba%' OR nazwa LIKE '%os' ORDER BY nazwa ASC;
+
+
+LEKCJA 4
+
+zadanie 1
+
+SELECT avg(waga) FROM kreatura WHERE rodzaj='wiking';
+SELECT rodzaj,avg(waga), count(idKreatury) AS ilosc FROM kreatura GROUP BY rodzaj;
+SELECT rodzaj,avg(2021-YEAR(dataUr)) AS sredni_wiek FROM kreatura GROUP BY rodzaj;
+
+zadanie 2
+
+SELECT rodzaj,SUM(ilosc*waga) AS suma_wag FROM zasob GROUP BY rodzaj;
+SELECT nazwa,avg(waga*ilosc) AS srednia_waga FROM zasob WHERE ilosc>=4 GROUP BY nazwa HAVING SUM(waga*ilosc)>=10;
+
